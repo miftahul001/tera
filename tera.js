@@ -28,6 +28,10 @@ const tera={
 		b.onreadystatechange=()=>{b.readyState==4&&(b.status==200?a.b(b.responseText):a.c&&a.c(b.status))}
 		b.send()
 	},
+	initUI: ()=>{
+		tera.select1=el({a:'select',b:el({a:'div',b:tera.dlg.ct,d:{style:'position:absolute;top:16px;right:16px;background:rgba(255,255,255,.5);border-radius:8px;box-shadow:0 0 6px 2px rgba(0,0,0,.1);padding:16px;'}})});
+		['Sumatera', 'Jakarta', 'Jawa Barat', 'Jawa', 'Bali Nusra', 'Kalimantan', 'KTI'].forEach(a=>{el({a:'option',b:tera.select1,c:a,d:{value:a}})})
+	},
 	init:()=>{
 		tera.dlg=dlg({title:'TERA', top:32, left:32, width:832, height:432})
 		tera.dlg.ct.style.overflow='hidden'
@@ -38,6 +42,7 @@ const tera={
 			tera.map.getStyle().layers.forEach(a=>{(a.id==='land'||a.id==='water')||tera.map.removeLayer(a.id)})
 			tera.map.setPaintProperty('land', 'background-color', 'rgba(0,0,0,.1)')//#CAD2D3
 			tera.loader({a:'map.json',b:tera.draw,c:a=>{alert(a)}})
+			tera.initUI()
 		})
 	},
 	hovered: null,
