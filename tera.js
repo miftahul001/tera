@@ -43,7 +43,8 @@ const tera={
 	},
 	init:()=>{
 		tera.dlg=dlg({title:'TERA', top:32, left:32, width:832, height:432})
-		tera.dlg.ct.id='map'
+		tera.dlg.ct.style.overflow='hidden'
+		new MutationObserver((a,b)=>{tera.map.resize()}).observe(tera.dlg.ct,{attributes:true})
 		tera.map = new mapboxgl.Map({container:tera.dlg.ct, style: 'mapbox://styles/mapbox/light-v10', center: [117, -2.8], zoom: 4.2 })
 		tera.map.on('load', ()=>{
 			//['boxZoom', 'dragRotate', 'keyboard', 'doubleClickZoom', 'doubleClickZoom', 'touchZoomRotate'].forEach(a=>CNQ.map[a].disable())
