@@ -1,0 +1,112 @@
+const tera={
+	marker: [],
+	initPoint:()=>{
+		[['P-D1-BDS', 1.124645304601902, 103.94141426927092],
+		//['P-D1-BTC', 1.1157152671284873, 104.0507451570575],
+		['P-D1-BKT', -0.3079456165843254, 100.37108033897674],
+		['P-D1-BNA', 5.553358777701846, 95.3205660981217],
+		['P-D1-BNK', -3.795909379618004, 102.26561803968907],
+		//['P-D1-DRI', 0.5255583830793623, 101.44805647425981],
+		['P-D1-PBR', 0.5255583830793623, 101.44805647425981],
+		['P-D2-CPP', -6.173934461289109, 106.85970715134441]].forEach((b,c)=>{
+			tera.marker.push(new mapboxgl.Marker({draggable: true, element:el({a:'div',c:b[0].split('-')[2], d:{style:'padding:0 4px;font-size:8px;background:rgba(87,136,250,.8);border-radius:50%;'},e:{click:a=>{a.stopPropagation();console.log(a.target.getBoundingClientRect());const c=/(\w+)\((.+?)\)/g.exec(a.target.style.transform)[2].split(',');console.log(parseInt(c[0])+'  '+parseInt(c[1]))}}})}).setLngLat([b[2], b[1]]).addTo(tera.map))
+		})
+		tera.marker[2].on('dragend', a=>{const b=a.target.getLngLat()
+		tera.map.getSource('line')._data.features=[{type:'Feature', id:1, properties:{p1:'BNA', p2:'BDS', color:'rgb(0,0,0)'}, geometry:{type:'LineString', coordinates:tera.curvedLine([[b.lng, b.lat], [103.94141426927092, 1.124645304601902]])}}]
+		tera.map.getSource('line').setData(tera.map.getSource('line')._data)
+		})
+		//<svg width="160" height="80">
+		//	<path id="curve" d="M0 0" stroke="green" stroke-width="4" stroke-linecap="round" fill="transparent"></path>
+		//</svg>
+		//tera.map.getSource('line')._data.features=[tera.curvedLine({n1:'BNA', n2:'BDS', color:'rgb(0,0,0)', p2:[95.3205660981217, 5.553358777701846], p1:[103.94141426927092, 1.124645304601902]})]
+		//tera.map.getSource('line')._data.features=[{type:'Feature', id:1, properties:{p1:'BNA', p2:'BDS', color:'rgb(0,0,0)'}, geometry:{type:'LineString', coordinates:tera.plot_curve([95.3205660981217, 5.553358777701846], [103.94141426927092, 1.124645304601902])}}]
+		tera.map.getSource('line')._data.features=[{type:'Feature', id:1, properties:{p1:'BNA', p2:'BDS', color:'rgb(0,0,0)'}, geometry:{type:'LineString', coordinates:tera.curvedLine([[95.3205660981217, 5.553358777701846], [103.94141426927092, 1.124645304601902]])}}]
+		tera.map.getSource('line').setData(tera.map.getSource('line')._data)
+	},
+	initPoint1:()=>{
+		const a=[]
+		[['P-D1-BDS', 1.124645304601902, 103.94141426927092],
+		//['P-D1-BTC', 1.1157152671284873, 104.0507451570575],
+		['P-D1-BKT', -0.3079456165843254, 100.37108033897674],
+		['P-D1-BNA', 5.553358777701846, 95.3205660981217],
+		['P-D1-BNK', -3.795909379618004, 102.26561803968907],
+		//['P-D1-DRI', 0.5255583830793623, 101.44805647425981],
+		['P-D1-PBR', 0.5255583830793623, 101.44805647425981],
+		['P-D2-CPP', -6.173934461289109, 106.85970715134441]].forEach((b,c)=>{
+			a.push({type:'Feature', id:c+1, properties:{name:b[0].split('-')[2]}, geometry:{type:'Point',coordinates:[b[2], b[1]]}})
+		})
+		tera.map.addSource('point', {type:'geojson', data:{type:"FeatureCollection", features:a}})
+		tera.map.addLayer({id:'point1', type:'circle', source:'point', paint:{'circle-color':'rgba(87,136,250,.8)', 'circle-radius':12}})
+		tera.map.addLayer({id:'point2', type:'symbol', source:'point', layout:{'text-field': ['get', 'name'], 'text-size': 9, 'text-justify': 'center', 'text-allow-overlap': true}, paint:{'text-color':'white'}})
+		//tera.map.addLayer({id:'point2', type:'symbol', source:'point', layout:{'text-field': ['get', 'name'], 'text-size': 8, 'text-justify': 'auto', 'text-allow-overlap': true, 'text-ignore-placement': true, 'icon-allow-overlap': true, 'icon-ignore-placement': true}, paint:{'text-halo-width':1, 'text-halo-blur':1, 'text-halo-color':'white'}})
+	},
+	loader: a=>{
+		const b = new XMLHttpRequest()
+		b.open('GET', a.a)
+		b.onreadystatechange=()=>{b.readyState==4&&(b.status==200?a.b(b.responseText):a.c&&a.c(b.status))}
+		b.send()
+	},
+	init:()=>{
+		tera.dlg=dlg({title:'TERA', top:32, left:32, width:832, height:432})
+		tera.dlg.ct.id='map'
+		tera.map = new mapboxgl.Map({container:tera.dlg.ct, style: 'mapbox://styles/mapbox/light-v10', center: [117, -2.8], zoom: 4.2 })
+		tera.map.on('load', ()=>{
+			//['boxZoom', 'dragRotate', 'keyboard', 'doubleClickZoom', 'doubleClickZoom', 'touchZoomRotate'].forEach(a=>CNQ.map[a].disable())
+			tera.map.getStyle().layers.forEach(a=>{(a.id==='land'||a.id==='water')||tera.map.removeLayer(a.id)})
+			tera.map.setPaintProperty('land', 'background-color', 'rgba(0,0,0,.1)')//#CAD2D3
+			tera.loader({a:'map.json',b:tera.draw,c:a=>{alert(a)}})
+		})
+	},
+	hovered: null,
+	draw:a=>{
+		a=JSON.parse(a)
+		a.features.forEach((b,c)=>{a.features[c].id=c+1})
+		tera.map.addSource('map', {type:'geojson', data:a})
+		tera.map.addLayer({id:'map', type:'line', source:'map', paint:{'line-color':'rgba(255,255,255,.6)', 'line-width':['case', ['boolean', ['feature-state', 'hover'], false], 4, 2]}})
+		tera.map.fitBounds([95.00, -11.01, 141.50, 5.91])
+		tera.map.addSource('line', {type:'geojson', data:{type:"FeatureCollection", features:[]}})
+		tera.map.addLayer({id:'line', type:'line', source:'line', paint:{'line-color':['get', 'color'], 'line-width':['case', ['boolean', ['feature-state', 'hover'], false], 4, 2]}})
+		tera.map.on('mousemove', 'line', a=> {
+			if (a.features.length > 0) {
+				tera.hovered&&tera.map.setFeatureState({source:'line', id:tera.hovered}, {hover:false} )
+				tera.hovered = a.features[0].id
+				tera.map.setFeatureState({source:'line', id:tera.hovered}, {hover:true})
+			}
+		})
+		tera.map.on('mouseleave', 'line', () => {
+			tera.hovered&&tera.map.setFeatureState({source:'line', id:tera.hovered}, {hover:false})
+			tera.hovered = null
+		})
+		tera.map.on('click', () => {
+			//console.log(tera.map.getSource('map')._data)
+		})
+		tera.initPoint()
+	},
+	plot_curve: (p1,p2)=>{
+		// returns an array of x,y coordinates to graph a perfect curve between 2 points.
+		const xy = []
+		const [bezierX, bezierY]=p1[1]>p2[1]?[p2[0],p1[1]]:[p1[0],p2[1]]
+		for(var t=0.0; t<=1; t+=0.01) {
+			xy.push([(1-t)*(1-t)*p1[0] + 2*(1-t) * t * bezierX + t*t*p2[0], (1-t)*(1-t)*p1[1] + 2*(1-t) * t * bezierY + t*t*p2[1]])
+		}
+		return xy; // returns array of coordinates
+	},
+	curvedLine: a=>{
+		const xy = []
+		const theta = Math.atan2(a[1][1] - a[0][1], a[1][0] - a[0][0]) - Math.PI / 2;
+		const bezierX = ((a[0][0]+a[1][0])*.5) + 10 * Math.cos(theta)
+		const bezierY = ((a[0][1]+a[1][1])*.5) + 2 * Math.sin(theta)
+		for(var t=0.0; t<=1; t+=0.01) {
+			xy.push([(1-t)*(1-t)*a[0][0] + 2*(1-t) * t * bezierX + t*t*a[1][0], (1-t)*(1-t)*a[0][1] + 2*(1-t) * t * bezierY + t*t*a[1][1]])
+		}
+		return xy; // returns array of coordinates
+	}
+}
+
+const initApp=()=>{
+	//mapboxgl.accessToken = 'pk.eyJ1IjoicmV6YXBsZSIsImEiOiJjam1odmlld20zZmFjM3Bsazlybjk3cGJvIn0.mZTtCP_QNLKTrI-LUYYsrA'
+	mapboxgl.accessToken = 'pk.eyJ1IjoibWFsLXdvb2QiLCJhIjoiY2oyZ2t2em50MDAyMzJ3cnltMDFhb2NzdiJ9.X-D4Wvo5E5QxeP7K_I3O8w'
+	//mapboxgl.accessToken = 'pk.eyJ1IjoicXVlMzIxNiIsImEiOiJjaWhxZmMxMDUwMDBzdXhsdWh0ZDkyMzVqIn0.sz3lHuX9erctIPE2ya6eCw'
+	//mapboxgl.accessToken = 'pk.eyJ1IjoibmFkaiIsImEiOiJjaW43a2hyOXYwMDJrd29semd6bmZha2JuIn0.nE1hjNjGG2rlxm_oMrysyg'
+	tera.init()
+}
