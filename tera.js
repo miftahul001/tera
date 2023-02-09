@@ -15,11 +15,6 @@ const tera={
 		tera.map.getSource('line')._data.features=[{type:'Feature', id:1, properties:{p1:'BNA', p2:'BDS', color:'rgb(0,0,0)'}, geometry:{type:'LineString', coordinates:tera.curvedLine([[b.lng, b.lat], [103.94141426927092, 1.124645304601902]])}}]
 		tera.map.getSource('line').setData(tera.map.getSource('line')._data)
 		})
-		//<svg width="160" height="80">
-		//	<path id="curve" d="M0 0" stroke="green" stroke-width="4" stroke-linecap="round" fill="transparent"></path>
-		//</svg>
-		//tera.map.getSource('line')._data.features=[tera.curvedLine({n1:'BNA', n2:'BDS', color:'rgb(0,0,0)', p2:[95.3205660981217, 5.553358777701846], p1:[103.94141426927092, 1.124645304601902]})]
-		//tera.map.getSource('line')._data.features=[{type:'Feature', id:1, properties:{p1:'BNA', p2:'BDS', color:'rgb(0,0,0)'}, geometry:{type:'LineString', coordinates:tera.plot_curve([95.3205660981217, 5.553358777701846], [103.94141426927092, 1.124645304601902])}}]
 		tera.map.getSource('line')._data.features=[{type:'Feature', id:1, properties:{p1:'BNA', p2:'BDS', color:'rgb(0,0,0)'}, geometry:{type:'LineString', coordinates:tera.curvedLine([[95.3205660981217, 5.553358777701846], [103.94141426927092, 1.124645304601902]])}}]
 		tera.map.getSource('line').setData(tera.map.getSource('line')._data)
 	},
@@ -82,16 +77,8 @@ const tera={
 		})
 		tera.initPoint()
 	},
-	plot_curve: (p1,p2)=>{
-		// returns an array of x,y coordinates to graph a perfect curve between 2 points.
-		const xy = []
-		const [bezierX, bezierY]=p1[1]>p2[1]?[p2[0],p1[1]]:[p1[0],p2[1]]
-		for(var t=0.0; t<=1; t+=0.01) {
-			xy.push([(1-t)*(1-t)*p1[0] + 2*(1-t) * t * bezierX + t*t*p2[0], (1-t)*(1-t)*p1[1] + 2*(1-t) * t * bezierY + t*t*p2[1]])
-		}
-		return xy; // returns array of coordinates
-	},
 	curvedLine: a=>{
+		a[0][0]<a[1][0]&&a.push(a.shift())
 		const xy = []
 		const theta = Math.atan2(a[1][1] - a[0][1], a[1][0] - a[0][0]) - Math.PI / 2;
 		const bezierX = ((a[0][0]+a[1][0])*.5) + 10 * Math.cos(theta)
