@@ -18,23 +18,6 @@ const tera={
 		tera.map.getSource('line')._data.features=[{type:'Feature', id:1, properties:{p1:'BNA', p2:'BDS', color:'rgb(0,0,0)'}, geometry:{type:'LineString', coordinates:tera.curvedLine([[95.3205660981217, 5.553358777701846], [103.94141426927092, 1.124645304601902]])}}]
 		tera.map.getSource('line').setData(tera.map.getSource('line')._data)
 	},
-	initPoint1:()=>{
-		const a=[]
-		[['P-D1-BDS', 1.124645304601902, 103.94141426927092],
-		//['P-D1-BTC', 1.1157152671284873, 104.0507451570575],
-		['P-D1-BKT', -0.3079456165843254, 100.37108033897674],
-		['P-D1-BNA', 5.553358777701846, 95.3205660981217],
-		['P-D1-BNK', -3.795909379618004, 102.26561803968907],
-		//['P-D1-DRI', 0.5255583830793623, 101.44805647425981],
-		['P-D1-PBR', 0.5255583830793623, 101.44805647425981],
-		['P-D2-CPP', -6.173934461289109, 106.85970715134441]].forEach((b,c)=>{
-			a.push({type:'Feature', id:c+1, properties:{name:b[0].split('-')[2]}, geometry:{type:'Point',coordinates:[b[2], b[1]]}})
-		})
-		tera.map.addSource('point', {type:'geojson', data:{type:"FeatureCollection", features:a}})
-		tera.map.addLayer({id:'point1', type:'circle', source:'point', paint:{'circle-color':'rgba(87,136,250,.8)', 'circle-radius':12}})
-		tera.map.addLayer({id:'point2', type:'symbol', source:'point', layout:{'text-field': ['get', 'name'], 'text-size': 9, 'text-justify': 'center', 'text-allow-overlap': true}, paint:{'text-color':'white'}})
-		//tera.map.addLayer({id:'point2', type:'symbol', source:'point', layout:{'text-field': ['get', 'name'], 'text-size': 8, 'text-justify': 'auto', 'text-allow-overlap': true, 'text-ignore-placement': true, 'icon-allow-overlap': true, 'icon-ignore-placement': true}, paint:{'text-halo-width':1, 'text-halo-blur':1, 'text-halo-color':'white'}})
-	},
 	loader: a=>{
 		const b = new XMLHttpRequest()
 		b.open('GET', a.a)
