@@ -9,7 +9,7 @@ const tera={
 		//['P-D1-DRI', 0.5255583830793623, 101.44805647425981],
 		['P-D1-PBR', 0.5255583830793623, 101.44805647425981],
 		['P-D2-CPP', -6.173934461289109, 106.85970715134441]].forEach((b,c)=>{
-			tera.marker.push(new mapboxgl.Marker({draggable: true, element:el({a:'div',c:b[0].split('-')[2], d:{style:'padding:0 4px;font-size:8px;background:rgba(87,136,250,.8);border-radius:50%;'},e:{click:a=>{a.stopPropagation();console.log(a.target.getBoundingClientRect());const c=/(\w+)\((.+?)\)/g.exec(a.target.style.transform)[2].split(',');console.log(parseInt(c[0])+'  '+parseInt(c[1]))}}})}).setLngLat([b[2], b[1]]).addTo(tera.map))
+			tera.marker.push(new mapboxgl.Marker({draggable: true, element:el({a:'div',c:b[0].split('-')[2], d:{style:'padding:0 4px;font-size:10px;font-family:"Barlow Condensed";background:rgba(87,136,250,.8);border-radius:50%;'},e:{click:a=>{a.stopPropagation();console.log(a.target.getBoundingClientRect());const c=/(\w+)\((.+?)\)/g.exec(a.target.style.transform)[2].split(',');console.log(parseInt(c[0])+'  '+parseInt(c[1]))}}})}).setLngLat([b[2], b[1]]).addTo(tera.map))
 		})
 		tera.marker[2].on('dragend', a=>{const b=a.target.getLngLat()
 		tera.map.getSource('line')._data.features=[{type:'Feature', id:1, properties:{p1:'BNA', p2:'BDS', color:'rgb(0,0,0)'}, geometry:{type:'LineString', coordinates:tera.curvedLine([[b.lng, b.lat], [103.94141426927092, 1.124645304601902]])}}]
