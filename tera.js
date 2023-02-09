@@ -37,6 +37,7 @@ const tera={
 		})
 	},
 	hovered: null,
+	popup1: el({a:'div',b:el({a:'div',d:{style:'position:fixed;background:rgba(255,255,255,.6);border-radius:8px;box-shadow:0 0 6px 2px rgba(0,0,0,.1);padding:8px;'}}),d:{style:'background:rgba(255,255,255,.8);border-radius:8px;display:flex;flex-direction:column;gap:8px;padding:16px;'}}),
 	draw:a=>{
 		a=JSON.parse(a)
 		a.features.forEach((b,c)=>{a.features[c].id=c+1})
@@ -49,11 +50,15 @@ const tera={
 			if (a.features.length > 0) {
 				tera.hovered&&tera.map.setFeatureState({source:'line', id:tera.hovered}, {hover:false} )
 				tera.hovered = a.features[0].id
+				tera.popup1.innerHTML=`<div>point1 : ${a.features[0].properties.p1}</div><div>point1 : ${a.features[0].properties.p2}</div>`
+				document.body.appendChild(tera.popup1.parentElement)
+				tera.popup1.parentElement.style.left=a.point.x+'px'
+				tera.popup1.parentElement.style.top=a.point.y+'px'
 				tera.map.setFeatureState({source:'line', id:tera.hovered}, {hover:true})
 			}
 		})
 		tera.map.on('mouseleave', 'line', () => {
-			tera.hovered&&tera.map.setFeatureState({source:'line', id:tera.hovered}, {hover:false})
+			tera.hovered&&(tera.map.setFeatureState({source:'line', id:tera.hovered}, {hover:false})&&document.body.removeChild(tera.popup1.parentElement))
 			tera.hovered = null
 		})
 		tera.map.on('click', () => {
@@ -64,11 +69,11 @@ const tera={
 	curvedLine: a=>{
 		a[0][0]<a[1][0]&&a.push(a.shift())
 		const xy = []
-		const theta = Math.atan2(a[1][1] - a[0][1], a[1][0] - a[0][0]) - Math.PI / 2;
+		const theta = Math.atan2(a[1][1] - a[0][1], a[1][0] - a[0][0]) - Math.PI / 2
 		const bezierX = ((a[0][0]+a[1][0])*.5) + 10 * Math.cos(theta)
 		const bezierY = ((a[0][1]+a[1][1])*.5) + 2 * Math.sin(theta)
 		for(var t=0.0; t<=1; t+=0.01) xy.push([(1-t)*(1-t)*a[0][0] + 2*(1-t) * t * bezierX + t*t*a[1][0], (1-t)*(1-t)*a[0][1] + 2*(1-t) * t * bezierY + t*t*a[1][1]])
-		return xy; // returns array of coordinates
+		return xy
 	}
 }
 
