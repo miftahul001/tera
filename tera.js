@@ -1,26 +1,28 @@
 const tera={
+	dt: [],
 	marker: [],
 	initPoint:()=>{
-		[['P-D1-BDS', 1.124645304601902, 103.94141426927092],
-		//['P-D1-BTC', 1.1157152671284873, 104.0507451570575],
-		['P-D1-BKT', -0.3079456165843254, 100.37108033897674],
-		['P-D1-BNA', 5.553358777701846, 95.3205660981217],
-		['P-D1-BNK', -3.795909379618004, 102.26561803968907],
-		//['P-D1-DRI', 0.5255583830793623, 101.44805647425981],
-		['P-D1-PBR', 0.5255583830793623, 101.44805647425981],
-		['P-D2-CPP', -6.173934461289109, 106.85970715134441]].forEach((b,c)=>{
-			tera.marker.push(new mapboxgl.Marker({/*draggable: true, */element:el({a:'div',c:b[0].split('-')[2], d:{style:'padding:0 4px;font-size:10px;font-family:"Barlow Condensed";background:rgba(87,136,250,.8);border-radius:50%;'},e:{click:a=>{a.stopPropagation();console.log(a.target.getBoundingClientRect());const c=/(\w+)\((.+?)\)/g.exec(a.target.style.transform)[2].split(',');console.log(parseInt(c[0])+'  '+parseInt(c[1]))}}})}).setLngLat([b[2], b[1]]).addTo(tera.map))
-		})
+		/*
 		tera.marker[2].on('dragend', a=>{const b=a.target.getLngLat()
 		tera.map.getSource('line')._data.features[0].geometry.coordinates=tera.curvedLine([[b.lng, b.lat], [103.94141426927092, 1.124645304601902]])
 		tera.map.getSource('line').setData(tera.map.getSource('line')._data)
 		})
-		tera.marker[5].on('dragend', a=>{const b=a.target.getLngLat()
-		tera.map.getSource('line')._data.features[1].geometry.coordinates=tera.curvedLine([[b.lng, b.lat], [103.94141426927092, 1.124645304601902]])
-		tera.map.getSource('line').setData(tera.map.getSource('line')._data)
-		})
-		tera.map.getSource('line')._data.features=[{type:'Feature', id:1, properties:{p1:'BNA', p2:'BDS', color:'rgb(0,0,0)'}, geometry:{type:'LineString', coordinates:tera.curvedLine([[95.3205660981217, 5.553358777701846], [103.94141426927092, 1.124645304601902]])}},{type:'Feature', id:2, properties:{p1:'CPP', p2:'BDS', color:'rgb(0,0,0)'}, geometry:{type:'LineString', coordinates:tera.curvedLine([[106.85970715134441, -6.173934461289109], [103.94141426927092, 1.124645304601902]])}}]
-		tera.map.getSource('line').setData(tera.map.getSource('line')._data)
+		*/
+		tera.map.getSource('line')._data.features=[]
+		tera.loader({a:'tera.json', b:a=>{
+			a=JSON.parse(a).map(a=>([...a.slice(0,-1),...a[6].split(',').map(a=>Number(a))]))
+			tera.dt=a
+			var i=1
+			a.forEach((b,c)=>{
+				const d=b[1].split('-')[2]
+				tera.marker.push(new mapboxgl.Marker({draggable: true, element:el({a:'div',c:d, d:{style:'padding:0 4px;font-size:10px;font-family:"Barlow Condensed";background:rgba(87,136,250,.8);border-radius:50%;'}})}).setLngLat([b[7], b[6]]).addTo(tera.map))
+				&&a.slice(c+1).forEach(a=>{
+					tera.map.getSource('line')._data.features.push({type:'Feature', id:i, properties:{p1:d, p2:a[1].split('-')[2], color:'rgb(0,0,0)'}, geometry:{type:'LineString', coordinates:tera.curvedLine([[b[7], b[6]], [a[7], a[6]]])}})
+					i++
+				})
+			})
+			tera.map.getSource('line').setData(tera.map.getSource('line')._data)
+		}})
 	},
 	loader: a=>{
 		const b = new XMLHttpRequest()
@@ -29,7 +31,23 @@ const tera={
 		b.send()
 	},
 	initUI: ()=>{
-		tera.select1=el({a:'select',b:el({a:'div',b:el({a:'div',b:tera.div,d:{style:'position:absolute;top:16px;right:16px;background:rgba(255,255,255,.5);border-radius:8px;box-shadow:0 0 6px 2px rgba(0,0,0,.1);padding:16px;'}}),c:'AREA'}).parentElement,d:{style:'padding:4px 8px;'}});
+		tera.select1=el({a:'select',b:el({a:'div',b:el({a:'div',b:tera.div,d:{style:'position:absolute;top:16px;right:16px;background:rgba(255,255,255,.5);border-radius:8px;box-shadow:0 0 6px 2px rgba(0,0,0,.1);padding:16px;'}}),c:'AREA'}).parentElement,d:{style:'padding:4px 8px;'},e:{change:a=>{
+			tera.marker.forEach(a=>{a.remove()})
+			tera.marker=[]
+			tera.map.getSource('line')._data.features=[];
+			const d=[]
+			var i=1;
+			(a.target.selectedIndex==0?tera.dt:tera.dt.filter(b=>b[3].trim()==a.target.value)).forEach(b=>{
+				const c=b[1].split('-')[2]
+				tera.marker.push(new mapboxgl.Marker({draggable: true, element:el({a:'div',c:c, d:{style:'padding:0 4px;font-size:10px;font-family:"Barlow Condensed";background:rgba(87,136,250,.8);border-radius:50%;'}})}).setLngLat([b[7], b[6]]).addTo(tera.map))
+				d.forEach(d=>{
+					tera.map.getSource('line')._data.features.push({type:'Feature', id:i, properties:{p1:c, p2:d[0], color:'rgb(0,0,0)'}, geometry:{type:'LineString', coordinates:tera.curvedLine([[b[7], b[6]], [d[1], d[2]]])}});
+					i++
+				})
+				d.push([c,b[7],b[6]])
+			})
+			tera.map.getSource('line').setData(tera.map.getSource('line')._data)
+		}}});
 		['ALL', 'Sumatera', 'Jakarta', 'Jawa Barat', 'Jawa', 'Bali Nusra', 'Kalimantan', 'KTI'].forEach(a=>{el({a:'option',b:tera.select1,c:a,d:{value:a,style:'padding:6px;'}})})
 	},
 	init:()=>{
@@ -81,7 +99,7 @@ const tera={
 		a[0][0]<a[1][0]&&a.push(a.shift())
 		const xy = []
 		const theta = Math.atan2(a[1][1] - a[0][1], a[1][0] - a[0][0]) - Math.PI / 2
-		const bezierX = ((a[0][0]+a[1][0])*.5) + 10 * Math.cos(theta)
+		const bezierX = ((a[0][0]+a[1][0])*.5) + 2 * Math.cos(theta)
 		const bezierY = ((a[0][1]+a[1][1])*.5) + 2 * Math.sin(theta)
 		for(var t=0.0; t<=1; t+=0.01) xy.push([(1-t)*(1-t)*a[0][0] + 2*(1-t) * t * bezierX + t*t*a[1][0], (1-t)*(1-t)*a[0][1] + 2*(1-t) * t * bezierY + t*t*a[1][1]])
 		return xy
