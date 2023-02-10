@@ -40,7 +40,7 @@ const tera={
 		tera.div=el({a:'div',b:document.body,d:{style:'width:100vw;height:100vh;'}})
 		tera.map = new mapboxgl.Map({container:tera.div, style: 'mapbox://styles/mapbox/light-v10', center: [117, -2.8], zoom: 4.2 })
 		tera.map.on('load', ()=>{
-			['boxZoom', 'dragRotate', 'keyboard', 'doubleClickZoom', 'doubleClickZoom', 'touchZoomRotate'].forEach(a=>{tera.map[a].disable()})
+			['boxZoom', 'doubleClickZoom', 'doubleClickZoom', 'dragPan', 'dragRotate', 'interactive', 'keyboard', 'touchZoomRotate'].forEach(a=>{tera.map[a]&&tera.map[a].disable()})
 			tera.map.getStyle().layers.forEach(a=>{(a.id==='land'||a.id==='water')||tera.map.removeLayer(a.id)})
 			tera.map.setPaintProperty('land', 'background-color', 'rgba(0,0,0,.1)')//#CAD2D3
 			tera.loader({a:'map.json',b:tera.draw,c:a=>{alert(a)}})
