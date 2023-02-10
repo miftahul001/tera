@@ -29,14 +29,16 @@ const tera={
 		b.send()
 	},
 	initUI: ()=>{
-		tera.select1=el({a:'select',b:el({a:'div',b:tera.dlg.ct,d:{style:'position:absolute;top:16px;right:16px;background:rgba(255,255,255,.5);border-radius:8px;box-shadow:0 0 6px 2px rgba(0,0,0,.1);padding:16px;'}})});
-		['Sumatera', 'Jakarta', 'Jawa Barat', 'Jawa', 'Bali Nusra', 'Kalimantan', 'KTI'].forEach(a=>{el({a:'option',b:tera.select1,c:a,d:{value:a}})})
+		tera.select1=el({a:'select',b:el({a:'div',b:el({a:'div',b:tera.div,d:{style:'position:absolute;top:16px;right:16px;background:rgba(255,255,255,.5);border-radius:8px;box-shadow:0 0 6px 2px rgba(0,0,0,.1);padding:16px;'}}),c:'AREA'}).parentElement,d:{style:'padding:4px 8px;'}});
+		['ALL', 'Sumatera', 'Jakarta', 'Jawa Barat', 'Jawa', 'Bali Nusra', 'Kalimantan', 'KTI'].forEach(a=>{el({a:'option',b:tera.select1,c:a,d:{value:a,style:'padding:6px;'}})})
 	},
 	init:()=>{
-		tera.dlg=dlg({title:'TERA', top:32, left:32, width:832, height:432})
-		tera.dlg.ct.style.overflow='hidden'
-		new MutationObserver((a,b)=>{tera.map.resize()}).observe(tera.dlg.ct,{attributes:true})
-		tera.map = new mapboxgl.Map({container:tera.dlg.ct, style: 'mapbox://styles/mapbox/light-v10', center: [117, -2.8], zoom: 4.2 })
+		//tera.dlg=dlg({title:'TERA', top:32, left:32, width:832, height:432})
+		//tera.dlg.ct.style.overflow='hidden'
+		//new MutationObserver((a,b)=>{tera.map.resize()}).observe(tera.dlg.ct,{attributes:true})
+		//tera.map = new mapboxgl.Map({container:tera.dlg.ct, style: 'mapbox://styles/mapbox/light-v10', center: [117, -2.8], zoom: 4.2 })
+		tera.div=el({a:'div',b:document.body,d:{style:'width:100vw;height:100vh;'}})
+		tera.map = new mapboxgl.Map({container:tera.div, style: 'mapbox://styles/mapbox/light-v10', center: [117, -2.8], zoom: 4.2 })
 		tera.map.on('load', ()=>{
 			//['boxZoom', 'dragRotate', 'keyboard', 'doubleClickZoom', 'doubleClickZoom', 'touchZoomRotate'].forEach(a=>CNQ.map[a].disable())
 			tera.map.getStyle().layers.forEach(a=>{(a.id==='land'||a.id==='water')||tera.map.removeLayer(a.id)})
