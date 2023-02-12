@@ -99,8 +99,8 @@ const tera={
 		a[0][0]<a[1][0]&&a.push(a.shift())
 		const xy = []
 		const theta = Math.atan2(a[1][1] - a[0][1], a[1][0] - a[0][0]) - Math.PI / 2
-		const bezierX = ((a[0][0]+a[1][0])*.5) + 2 * Math.cos(theta)
-		const bezierY = ((a[0][1]+a[1][1])*.5) + 2 * Math.sin(theta)
+		const bezierX = ((a[0][0]+a[1][0])*.5) + (1 + Math.abs(Math.abs(a[0][0])-Math.abs(a[1][0]))) * Math.cos(theta)
+		const bezierY = ((a[0][1]+a[1][1])*.5) + (1 + Math.abs(Math.abs(a[0][1])-Math.abs(a[1][1]))) * Math.sin(theta)
 		for(var t=0.0; t<=1; t+=0.01) xy.push([(1-t)*(1-t)*a[0][0] + 2*(1-t) * t * bezierX + t*t*a[1][0], (1-t)*(1-t)*a[0][1] + 2*(1-t) * t * bezierY + t*t*a[1][1]])
 		return xy
 	}
