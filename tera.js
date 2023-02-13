@@ -111,13 +111,13 @@ const tera={
 			const a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.sin(dLon/2) * Math.sin(dLon/2)
 			return 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a))
 		}
-		//a[0][0]<a[1][0]&&a.push(a.shift())
+		a[0][0]<a[1][0]&&a.push(a.shift())
 		const d=distanceFromLatLon(a[0][1], a[0][0], a[1][1], a[1][0])
 		const xy = []
 		const theta = Math.atan2(a[1][1] - a[0][1], a[1][0] - a[0][0]) - Math.PI/2
 		const bezierX = ((a[0][0]+a[1][0])*.5) + (Math.ceil(d*20)+d)*Math.cos(theta)
 		const bezierY = ((a[0][1]+a[1][1])*.5) + (Math.ceil(d*20)+d)*Math.sin(theta)
-		for(var t=0.0; t<=1; t+=0.01) xy.push([(1-t)*(1-t)*a[0][0] + 2*(1-t) * t * bezierX + t*t*a[1][0], (1-t)*(1-t)*a[0][1] + 2*(1-t) * t * bezierY + t*t*a[1][1]])
+		for(var t=0.0; t<=1; t+=0.02) xy.push([(1-t)*(1-t)*a[0][0] + 2*(1-t) * t * bezierX + t*t*a[1][0], (1-t)*(1-t)*a[0][1] + 2*(1-t) * t * bezierY + t*t*a[1][1]])
 		return xy
 	}
 }
