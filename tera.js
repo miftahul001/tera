@@ -1,6 +1,16 @@
 const tera={
 	dt: [],
 	//lines: [],
+	bounds: {
+		'ALL':[95.00, -11.01, 141.50, 5.91],
+		'Sumatera':[[87.5804035415486, -6.94445890719112], [116.84571591746732, 7.915340276124155]],
+		'Jakarta':[[105.68630845036358, -6.806982298001813], [108.30052663829349, -5.483478074794576]],
+		'Jawa Barat':[[106.1453089343641, -7.698828393588045], [110.03506948628046, -5.731815040905644]],
+		'Jawa':[[108.2342842814287, -7.897184377681256], [112.12404483334501, -5.930986393199731]],
+		'Bali Nusra':[[111.67861815601236, -11.470896156308854], [124.0572412467622, -5.237684954919516]],
+		'Kalimantan':[107.18526071082897, -3.9751101734916574, 119.56388380157892, 2.32436651686956],
+		'KTI':[[117.94928504048863, -7.836370189162224], [141.1661336625039, 3.958161633240664]]
+	},
 	marker: [],
 	initPoint:()=>{
 		tera.map.getSource('line')._data.features=[]
@@ -30,6 +40,7 @@ const tera={
 	},
 	initUI: ()=>{
 		tera.select1=el({a:'select',b:el({a:'div',b:el({a:'div',b:tera.div,d:{style:'position:absolute;top:16px;right:16px;background:rgba(255,255,255,.5);border-radius:8px;box-shadow:0 0 6px 2px rgba(0,0,0,.1);padding:16px;'}}),c:'AREA'}).parentElement,d:{style:'padding:4px 8px;'},e:{change:a=>{
+			tera.map.fitBounds(tera.bounds[a.target.value])
 			tera.marker.forEach(a=>{a.remove()})
 			tera.marker=[]
 			tera.map.getSource('line')._data.features=[];
