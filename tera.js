@@ -20,7 +20,7 @@ const tera={
 			var i=1
 			a.forEach((b,c)=>{
 				const d=b[1].split('-')[2]
-				tera.marker.push(new mapboxgl.Marker({draggable: true, element:el({a:'div',c:d, d:{style:'padding:0 4px;font-size:10px;font-family:"Barlow Condensed";background:rgba(87,136,250,.8);border-radius:50%;'}})}).setLngLat([b[7], b[6]]).addTo(tera.map))
+				tera.marker.push(new mapboxgl.Marker({element:el({a:'div',c:d, d:{style:'padding:0 4px;font-size:10px;font-family:"Barlow Condensed";background:rgba(87,136,250,.8);border-radius:50%;'}})}).setLngLat([b[7], b[6]]).addTo(tera.map))
 				&&a.slice(c+1).forEach(a=>{
 					if (Math.random()<.5) {
 						//tera.lines.push([d, a[1].split('-')[2]])
@@ -48,7 +48,7 @@ const tera={
 			var i=1;
 			(a.target.selectedIndex==0?tera.dt:tera.dt.filter(b=>b[3].trim()==a.target.value)).forEach(b=>{
 				const c=b[1].split('-')[2]
-				tera.marker.push(new mapboxgl.Marker({draggable: true, element:el({a:'div',c:c, d:{style:'padding:0 4px;font-size:10px;font-family:"Barlow Condensed";background:rgba(87,136,250,.8);border-radius:50%;'}})}).setLngLat([b[7], b[6]]).addTo(tera.map))
+				tera.marker.push(new mapboxgl.Marker({element:el({a:'div',c:c, d:{style:'padding:0 4px;font-size:10px;font-family:"Barlow Condensed";background:rgba(87,136,250,.8);border-radius:50%;'}})}).setLngLat([b[7], b[6]]).addTo(tera.map))
 				d.forEach(d=>{
 					if (Math.random()<.5) {
 						//tera.lines.push([d, a[1].split('-')[2]])
