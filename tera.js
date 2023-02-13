@@ -118,6 +118,7 @@ const tera={
 		const bezierX = ((a[0][0]+a[1][0])*.5) + (Math.ceil(d*20)+d)*Math.cos(theta)
 		const bezierY = ((a[0][1]+a[1][1])*.5) + (Math.ceil(d*20)+d)*Math.sin(theta)
 		for(var t=0.0; t<=1; t+=0.02) xy.push([(1-t)*(1-t)*a[0][0] + 2*(1-t) * t * bezierX + t*t*a[1][0], (1-t)*(1-t)*a[0][1] + 2*(1-t) * t * bezierY + t*t*a[1][1]])
+		xy.push([a[1][0],a[1][1]])
 		return xy
 	}
 }
