@@ -104,11 +104,19 @@ const tera={
 		tera.initPoint()
 	},
 	curvedLine: a=>{
-		a[0][0]<a[1][0]&&a.push(a.shift())
+		const deg2rad=(deg)=>deg * (Math.PI/180)
+		const distanceFromLatLon=(lat1, lon1, lat2, lon2)=>{
+			const dLat = deg2rad(lat2-lat1)	// deg2rad below
+			const dLon = deg2rad(lon2-lon1)
+			const a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.sin(dLon/2) * Math.sin(dLon/2)
+			return 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a))
+		}
+		//a[0][0]<a[1][0]&&a.push(a.shift())
+		const d=distanceFromLatLon(a[0][1], a[0][0], a[1][1], a[1][0])
 		const xy = []
-		const theta = Math.atan2(a[1][1] - a[0][1], a[1][0] - a[0][0]) - Math.PI / 2
-		const bezierX = ((a[0][0]+a[1][0])*.5) + (1 + Math.abs(Math.abs(a[0][0])-Math.abs(a[1][0]))) * Math.cos(theta)
-		const bezierY = ((a[0][1]+a[1][1])*.5) + (1 + Math.abs(Math.abs(a[0][1])-Math.abs(a[1][1]))) * Math.sin(theta)
+		const theta = Math.atan2(a[1][1] - a[0][1], a[1][0] - a[0][0]) - Math.PI/2
+		const bezierX = ((a[0][0]+a[1][0])*.5) + (Math.ceil(d*20)+d)*Math.cos(theta)
+		const bezierY = ((a[0][1]+a[1][1])*.5) + (Math.ceil(d*20)+d)*Math.sin(theta)
 		for(var t=0.0; t<=1; t+=0.01) xy.push([(1-t)*(1-t)*a[0][0] + 2*(1-t) * t * bezierX + t*t*a[1][0], (1-t)*(1-t)*a[0][1] + 2*(1-t) * t * bezierY + t*t*a[1][1]])
 		return xy
 	}
