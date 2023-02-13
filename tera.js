@@ -1,13 +1,8 @@
 const tera={
 	dt: [],
+	//lines: [],
 	marker: [],
 	initPoint:()=>{
-		/*
-		tera.marker[2].on('dragend', a=>{const b=a.target.getLngLat()
-		tera.map.getSource('line')._data.features[0].geometry.coordinates=tera.curvedLine([[b.lng, b.lat], [103.94141426927092, 1.124645304601902]])
-		tera.map.getSource('line').setData(tera.map.getSource('line')._data)
-		})
-		*/
 		tera.map.getSource('line')._data.features=[]
 		tera.loader({a:'tera.json', b:a=>{
 			a=JSON.parse(a).map(a=>([...a.slice(0,-1),...a[6].split(',').map(a=>Number(a))]))
@@ -17,8 +12,11 @@ const tera={
 				const d=b[1].split('-')[2]
 				tera.marker.push(new mapboxgl.Marker({draggable: true, element:el({a:'div',c:d, d:{style:'padding:0 4px;font-size:10px;font-family:"Barlow Condensed";background:rgba(87,136,250,.8);border-radius:50%;'}})}).setLngLat([b[7], b[6]]).addTo(tera.map))
 				&&a.slice(c+1).forEach(a=>{
-					tera.map.getSource('line')._data.features.push({type:'Feature', id:i, properties:{p1:d, p2:a[1].split('-')[2], color:'rgb(0,0,0)'}, geometry:{type:'LineString', coordinates:tera.curvedLine([[b[7], b[6]], [a[7], a[6]]])}})
-					i++
+					if (Math.random()<.5) {
+						//tera.lines.push([d, a[1].split('-')[2]])
+						tera.map.getSource('line')._data.features.push({type:'Feature', id:i, properties:{p1:d, p2:a[1].split('-')[2], color:`rgb(${Math.floor(Math.random()*255)},${Math.floor(Math.random()*255)},${Math.floor(Math.random()*255)})`}, geometry:{type:'LineString', coordinates:tera.curvedLine([[b[7], b[6]], [a[7], a[6]]])}})
+						i++
+					}
 				})
 			})
 			tera.map.getSource('line').setData(tera.map.getSource('line')._data)
@@ -41,8 +39,11 @@ const tera={
 				const c=b[1].split('-')[2]
 				tera.marker.push(new mapboxgl.Marker({draggable: true, element:el({a:'div',c:c, d:{style:'padding:0 4px;font-size:10px;font-family:"Barlow Condensed";background:rgba(87,136,250,.8);border-radius:50%;'}})}).setLngLat([b[7], b[6]]).addTo(tera.map))
 				d.forEach(d=>{
-					tera.map.getSource('line')._data.features.push({type:'Feature', id:i, properties:{p1:c, p2:d[0], color:'rgb(0,0,0)'}, geometry:{type:'LineString', coordinates:tera.curvedLine([[b[7], b[6]], [d[1], d[2]]])}});
-					i++
+					if (Math.random()<.5) {
+						//tera.lines.push([d, a[1].split('-')[2]])
+						tera.map.getSource('line')._data.features.push({type:'Feature', id:i, properties:{p1:c, p2:d[0], color:`rgb(${Math.floor(Math.random()*255)},${Math.floor(Math.random()*255)},${Math.floor(Math.random()*255)})`}, geometry:{type:'LineString', coordinates:tera.curvedLine([[b[7], b[6]], [d[1], d[2]]])}});
+						i++
+					}
 				})
 				d.push([c,b[7],b[6]])
 			})
@@ -51,10 +52,6 @@ const tera={
 		['ALL', 'Sumatera', 'Jakarta', 'Jawa Barat', 'Jawa', 'Bali Nusra', 'Kalimantan', 'KTI'].forEach(a=>{el({a:'option',b:tera.select1,c:a,d:{value:a,style:'padding:6px;'}})})
 	},
 	init:()=>{
-		//tera.dlg=dlg({title:'TERA', top:32, left:32, width:832, height:432})
-		//tera.dlg.ct.style.overflow='hidden'
-		//new MutationObserver((a,b)=>{tera.map.resize()}).observe(tera.dlg.ct,{attributes:true})
-		//tera.map = new mapboxgl.Map({container:tera.dlg.ct, style: 'mapbox://styles/mapbox/light-v10', center: [117, -2.8], zoom: 4.2 })
 		tera.div=el({a:'div',b:document.body,d:{style:'width:100vw;height:100vh;'}})
 		tera.map = new mapboxgl.Map({container:tera.div, style: 'mapbox://styles/mapbox/light-v10', center: [117, -2.8], zoom: 4.2 })
 		tera.map.on('load', ()=>{
