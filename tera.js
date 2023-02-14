@@ -55,6 +55,7 @@ const tera={
 		tera.loader({a:'data/area.json', b:a=>{
 			tera.area=JSON.parse(a)
 			tera.area.forEach(a=>{el({a:'option',b:tera.select1,c:a.a,d:{value:a.a,style:'padding:6px;'}})})
+			tera.loadLines('Main POP')
 		}})
 	},
 	init:()=>{
@@ -96,7 +97,7 @@ const tera={
 		tera.map.on('click', () => {
 			//console.log(tera.map.getSource('map')._data)
 		})
-		tera.initPoint()
+		//tera.initPoint()
 	},
 	drawLine: a=>{
 		//a[3]*=.01
