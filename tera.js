@@ -21,13 +21,13 @@ const tera={
 			a.forEach((b,c)=>{
 				const d=b[1].split('-')[2]
 				tera.marker.push(new mapboxgl.Marker({element:el({a:'div',c:d, d:{style:'padding:0 4px;font-size:10px;font-family:"Barlow Condensed";background:rgba(87,136,250,.8);border-radius:50%;'}})}).setLngLat([b[7], b[6]]).addTo(tera.map))
-				&&a.slice(c+1).forEach(a=>{
-					if (Math.random()<.5) {
-						//tera.lines.push([d, a[1].split('-')[2]])
-						tera.map.getSource('line')._data.features.push({type:'Feature', id:i, properties:{p1:d, p2:a[1].split('-')[2], color:`rgb(${Math.floor(Math.random()*255)},${Math.floor(Math.random()*255)},${Math.floor(Math.random()*255)})`}, geometry:{type:'LineString', coordinates:tera.curvedLine([[b[7], b[6]], [a[7], a[6]]])}})
-						i++
-					}
-				})
+				//&&a.slice(c+1).forEach(a=>{
+				//	if (Math.random()<.5) {
+				//		//tera.lines.push([d, a[1].split('-')[2]])
+				//		tera.map.getSource('line')._data.features.push({type:'Feature', id:i, properties:{p1:d, p2:a[1].split('-')[2], color:`rgb(${Math.floor(Math.random()*255)},${Math.floor(Math.random()*255)},${Math.floor(Math.random()*255)})`}, geometry:{type:'LineString', coordinates:tera.curvedLine([[b[7], b[6]], [a[7], a[6]]])}})
+				//		i++
+				//	}
+				//})
 			})
 			tera.map.getSource('line').setData(tera.map.getSource('line')._data)
 		}})
