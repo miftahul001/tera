@@ -70,7 +70,7 @@ const tera={
 		})
 	},
 	hovered: null,
-	popup1: el({a:'div',b:el({a:'div',b:el({a:'div',b:document.body,d:{style:'position:fixed;top:0;left:16px;display:flex;align-items:center;height:100vh;'}}), d:{style:'background:rgba(255,255,255,.6);border-radius:8px;box-shadow:0 0 6px 2px rgba(0,0,0,.1);padding:8px;'}}),d:{style:'background:rgba(255,255,255,.8);border-radius:8px;display:flex;flex-direction:column;gap:8px;padding:16px;'}}),
+	popup1: el({a:'div',b:el({a:'div',b:el({a:'div',b:document.body,d:{style:'position:fixed;top:0;left:16px;display:flex;align-items:center;height:calc(100vh - 128px);'}}), d:{style:'background:rgba(255,255,255,.6);border-radius:8px;box-shadow:0 0 6px 2px rgba(0,0,0,.1);padding:8px;'}}),d:{style:'background:rgba(255,255,255,.8);border-radius:8px;display:flex;flex-direction:column;gap:8px;padding:16px;'}}),
 	draw:a=>{
 		a=JSON.parse(a)
 		a.features.forEach((b,c)=>{a.features[c].id=c+1})
@@ -83,7 +83,7 @@ const tera={
 			if (a.features.length > 0) {
 				tera.hovered&&tera.map.setFeatureState({source:'line', id:tera.hovered}, {hover:false} )
 				tera.hovered = a.features[0].id
-				tera.popup1.innerHTML=`<div>point1 : ${a.features[0].properties.p1}</div><div>point1 : ${a.features[0].properties.p2}</div>`
+				tera.popup1.innerHTML=`<div>node1 : ${a.features[0].properties.p1}</div><div>node2 : ${a.features[0].properties.p2}</div>`
 				document.body.appendChild(tera.popup1.parentElement.parentElement)
 				//tera.popup1.parentElement.style.left=a.point.x+'px'
 				//tera.popup1.parentElement.style.top=a.point.y+'px'
