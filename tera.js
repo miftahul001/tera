@@ -55,7 +55,7 @@ const tera={
 		tera.loader({a:'data/area.json', b:a=>{
 			tera.area=JSON.parse(a)
 			tera.area.forEach(a=>{el({a:'option',b:tera.select1,c:a.a,d:{value:a.a,style:'padding:6px;'}})})
-			tera.loadLines('Main POP')
+			tera.loadLines('ALL')
 		}})
 	},
 	init:()=>{
