@@ -28,7 +28,7 @@ const tera={
 					nodes.push(a[0])
 				}
 				if (!nodes.find(b=>b==a[1])) {
-					tera.marker.push(new mapboxgl.Marker({element:el({a:'div',c:a[0], d:{style:'padding:0 4px;font-size:10px;font-family:"Barlow Condensed";background:rgba(87,136,250,.8);border-radius:50%;'}})}).setLngLat([tera.lines[id+1].lng, tera.lines[id+1].lat]).addTo(tera.map))
+					tera.marker.push(new mapboxgl.Marker({element:el({a:'div',c:a[1], d:{style:'padding:0 4px;font-size:10px;font-family:"Barlow Condensed";background:rgba(87,136,250,.8);border-radius:50%;'}})}).setLngLat([tera.lines[id+1].lng, tera.lines[id+1].lat]).addTo(tera.map))
 					nodes.push(a[1])
 				}
 				tera.drawLine(id)
