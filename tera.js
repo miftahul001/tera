@@ -72,7 +72,7 @@ const tera={
 		})
 	},
 	hovered: null,
-	popup1: el({a:'div',b:el({a:'div',b:el({a:'div',d:{style:'position:absolute;top:0;left:16px;display:flex;align-items:center;height:calc(100% - 128px);'}}), d:{style:'background:rgba(255,255,255,.4);border-radius:8px;box-shadow:0 0 6px 2px rgba(0,0,0,.1);padding:8px;'}}),d:{style:'background:rgba(255,255,255,.6);border-radius:8px;display:flex;flex-direction:column;gap:4px;padding:12px;'}}),
+	popup1: el({a:'div',b:el({a:'div', b:el({a:'div', b:el({a:'div',b:el({a:'div',d:{style:'position:absolute;top:0;left:16px;display:flex;align-items:center;height:calc(100% - 128px);'}}), d:{style:'background:rgba(255,255,255,.4);border-radius:8px;box-shadow:0 0 6px 2px rgba(0,0,0,.1);padding:8px;'}}), c:'info', d:{style:'background:rgba(0,0,0,.8);border-radius:8px;color:rgba(255,255,255,.8);font-weight:bold;padding:4px 32px;margin-bottom:8px;position:relative;'}}),c:'x',d:{style:'background:rgba(255,255,255,.8);color:#000;border-radius:4px;font-weight:bold;padding:0 3px;position:absolute;top:3px;right:6px;'}}).parentElement.parentElement,d:{style:'background:rgba(255,255,255,.6);border-radius:8px;display:flex;flex-direction:column;gap:4px;padding:12px;'}}),
 	draw:a=>{
 		a=JSON.parse(a)
 		a.features.forEach((b,c)=>{a.features[c].id=c+1})
