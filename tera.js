@@ -1,4 +1,5 @@
 const tera={
+	warna: ['rgb(255,255,255)', 'rgb(140,0,255)', 'rgb(32,31,255)', 'rgb(0,192,255)', 'rgb(1,240,0)', 'rgb(241,240,0)', 'rgb(255,192,0)', 'rgb(254,0,0)'],
 	nodes: [],
 	lines: [],
 	area: [],
@@ -16,31 +17,20 @@ const tera={
 		tera.map.getSource('line')._data.features=[]
 		tera.map.getSource('line').setData(tera.map.getSource('line')._data)
 		tera.loader({a:`data/${a}.json`, b:a=>{
-			tera.lines=JSON.parse(a)
-			const nodes=[];
-			tera.lines.forEach((a,b)=>{
-				const p1=tera.nodes.find(b=>b.a==a[0])
-				const p2=tera.nodes.find(b=>b.a==a[1])
-				if (!nodes.find(b=>b==p1.a)) {
-					tera.marker.push(new mapboxgl.Marker({draggable:true, element:el({a:'div',c:p1.a, d:{style:'padding:0 4px;font-size:10px;font-family:"Barlow Condensed";background:rgba(87,136,250,.8);border-radius:50%;'}})}).setLngLat([p1.lng, p1.lat]).addTo(tera.map))
-					nodes.push(p1.a)
+			var id=0;
+			[...new Set(JSON.parse(a))]..forEach(a=>{
+				tera.lines.push({...tera.nodes.find(b=>b.a==a[0]), lng3:a[2][0], lat3:a[2][1], color:ccol()})
+				tera.lines.push({...tera.nodes.find(b=>b.a==a[1]), color:ccol()})
+				if (!nodes.find(b=>b==a[0])) {
+					tera.marker.push(new mapboxgl.Marker({draggable:true, element:el({a:'div',c:a[0], d:{style:'padding:0 4px;font-size:10px;font-family:"Barlow Condensed";background:rgba(87,136,250,.8);border-radius:50%;'}})}).setLngLat([tera.lines[id].lng, tera.lines[id].lat]).addTo(tera.map))
+					nodes.push(a[0])
 				}
-				if (!nodes.find(b=>b==p2.a)) {
-					tera.marker.push(new mapboxgl.Marker({draggable:true, element:el({a:'div',c:p2.a, d:{style:'padding:0 4px;font-size:10px;font-family:"Barlow Condensed";background:rgba(87,136,250,.8);border-radius:50%;'}})}).setLngLat([p2.lng, p2.lat]).addTo(tera.map))
-					nodes.push(p2.a)
+				if (!nodes.find(b=>b==a[1])) {
+					tera.marker.push(new mapboxgl.Marker({draggable:true, element:el({a:'div',c:a[1], d:{style:'padding:0 4px;font-size:10px;font-family:"Barlow Condensed";background:rgba(87,136,250,.8);border-radius:50%;'}})}).setLngLat([tera.lines[id+1].lng, tera.lines[id+1].lat]).addTo(tera.map))
+					nodes.push(a[1])
 				}
-				tera.map.getSource('line')._data.features.push({
-					type:'Feature',
-					id:b+1,
-					properties:{p1:a[0], p2:a[1], color:`rgb(${Math.floor(Math.random()*255)},${Math.floor(Math.random()*255)},${Math.floor(Math.random()*255)})`},
-					geometry:{type:'LineString',
-						coordinates:tera.drawLine({
-							p1:p1,
-							p2:p2,
-							p3:{lng:a[2][0], lat:a[2][1]}
-						})
-					}
-				})
+				tera.drawLine(id)
+				id+=2
 			})
 			tera.map.getSource('line').setData(tera.map.getSource('line')._data)
 		}})
@@ -63,8 +53,8 @@ const tera={
 		tera.map = new mapboxgl.Map({container:tera.div, style: 'mapbox://styles/mapbox/light-v10', center: [117, -2.8], zoom: 4.2 })
 		tera.map.on('load', ()=>{
 			//['boxZoom', 'doubleClickZoom', 'doubleClickZoom', 'dragPan', 'dragRotate', 'interactive', 'keyboard', 'touchZoomRotate'].forEach(a=>{tera.map[a]&&tera.map[a].disable()})
-			tera.map.getStyle().layers.forEach(a=>{(a.id==='land'||a.id==='water')||tera.map.removeLayer(a.id)})
-			tera.map.setPaintProperty('land', 'background-color', 'rgba(0,0,0,.1)')//#CAD2D3
+			//tera.map.getStyle().layers.forEach(a=>{(a.id==='land'||a.id==='water')||tera.map.removeLayer(a.id)})
+			//tera.map.setPaintProperty('land', 'background-color', 'rgba(0,0,0,.1)')//#CAD2D3
 			tera.loader({a:'map.json',b:tera.draw,c:a=>{alert(a)}})
 			tera.initUI()
 		})
@@ -82,18 +72,22 @@ const tera={
 		tera.map.addLayer({id:'line2', type:'line', source:'line', paint:{'line-color':['get', 'color'], 'line-width':['case', ['boolean', ['feature-state', 'hover'], false], 3, 3]}})
 		tera.map.on('mousemove', 'line', a=> {
 			if (a.features.length > 0) {
-				tera.hovered&&tera.map.setFeatureState({source:'line', id:tera.hovered}, {hover:false} )
-				tera.hovered = a.features[0].id
-				tera.popup1.innerHTML=`<div>node1 : ${a.features[0].properties.p1}</div><div>node2 : ${a.features[0].properties.p2}</div>`
+				tera.map.setFeatureState({source:'line', id:tera.hovered}, {hover:false} )
+				tera.map.setFeatureState({source:'line', id:tera.hovered+1}, {hover:false} )
+				tera.hovered = a.features[0].id-a.features[0].id%2
+				tera.popup1.innerHTML=`<div>node1 : ${tera.lines[tera.hovered].a}</div><div>node2 : ${tera.lines[tera.hovered+1].a}</div>`
 				tera.div.appendChild(tera.popup1.parentElement.parentElement)
-				//tera.popup1.parentElement.style.left=a.point.x+'px'
-				//tera.popup1.parentElement.style.top=a.point.y+'px'
 				tera.map.setFeatureState({source:'line', id:tera.hovered}, {hover:true})
+				tera.map.setFeatureState({source:'line', id:tera.hovered+1}, {hover:true})
 			}
 		})
 		tera.map.on('mouseleave', 'line', () => {
-			tera.hovered&&(tera.map.setFeatureState({source:'line', id:tera.hovered}, {hover:false})&&tera.div.removeChild(tera.popup1.parentElement.parentElement))
-			tera.hovered = null
+			if (tera.hovered!=null) {
+				tera.map.setFeatureState({source:'line', id:tera.hovered}, {hover:false})
+				tera.map.setFeatureState({source:'line', id:tera.hovered+1}, {hover:false})
+				tera.div.removeChild(tera.popup1.parentElement.parentElement)
+				tera.hovered = null
+			}
 		})
 		tera.map.on('click', () => {
 			//console.log(tera.map.getSource('map')._data)
@@ -101,11 +95,12 @@ const tera={
 		//tera.initPoint()
 	},
 	drawLine: a=>{
-		//a[3]*=.01
+		const b=b=>{tera.map.getSource('line')._data.features.push({ type:'Feature', id:b.id, properties:{color:tera.lines[b.id].color}, geometry:{type:'LineString', coordinates:b.b } })}
 		const xy=[]
-		for(var t=0.0; t<=1; t+=0.05) xy.push([(1-t)*(1-t)*a.p1.lng + 2*(1-t) * t * a.p3.lng + t*t*a.p2.lng, (1-t)*(1-t)*a.p1.lat + 2*(1-t) * t * a.p3.lat + t*t*a.p2.lat])
-		xy.push([a.p2.lng,a.p2.lat])
-		return xy
+		for(var t=0.0; t<=1; t+=0.05) xy.push([(1-t)*(1-t)*tera.lines[a].lng + 2*(1-t) * t * tera.lines[a].lng3 + t*t*tera.lines[a+1].lng, (1-t)*(1-t)*tera.lines[a].lat + 2*(1-t) * t * tera.lines[a].lat3 + t*t*tera.lines[a+1].lat])
+		xy.push([tera.lines[a+1].lng,tera.lines[a+1].lat])
+		b({id:a, b:xy.slice(0,Math.ceil(xy.length/2))})
+		b({id:a+1, b:xy.slice(-Math.ceil(xy.length/2))})
 	},
 }
 
