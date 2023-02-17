@@ -18,7 +18,7 @@ const tera={
 		tera.map.getSource('line').setData(tera.map.getSource('line')._data)
 		tera.loader({a:`data/${a}.json`, b:a=>{
 			var id=0;
-			[...new Set(JSON.parse(a))]..forEach(a=>{
+			[...new Set(JSON.parse(a))].forEach(a=>{
 				tera.lines.push({...tera.nodes.find(b=>b.a==a[0]), lng3:a[2][0], lat3:a[2][1], color:ccol()})
 				tera.lines.push({...tera.nodes.find(b=>b.a==a[1]), color:ccol()})
 				if (!nodes.find(b=>b==a[0])) {
