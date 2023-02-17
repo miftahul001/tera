@@ -78,7 +78,8 @@ const tera={
 		tera.map.addLayer({id:'map', type:'line', source:'map', paint:{'line-color':'rgba(255,255,255,.6)', 'line-width':['case', ['boolean', ['feature-state', 'hover'], false], 4, 2]}})
 		tera.map.fitBounds([95.00, -11.01, 141.50, 5.91])
 		tera.map.addSource('line', {type:'geojson', data:{type:"FeatureCollection", features:[]}})
-		tera.map.addLayer({id:'line', type:'line', source:'line', paint:{'line-color':['get', 'color'], 'line-width':['case', ['boolean', ['feature-state', 'hover'], false], 4, 2]}})
+		tera.map.addLayer({id:'line', type:'line', source:'line', paint:{'line-color':'#000000', 'line-gap-width':3, 'line-width':['case', ['boolean', ['feature-state', 'hover'], false], 3, 1]}})
+		tera.map.addLayer({id:'line2', type:'line', source:'line', paint:{'line-color':['get', 'color'], 'line-width':['case', ['boolean', ['feature-state', 'hover'], false], 3, 3]}})
 		tera.map.on('mousemove', 'line', a=> {
 			if (a.features.length > 0) {
 				tera.hovered&&tera.map.setFeatureState({source:'line', id:tera.hovered}, {hover:false} )
