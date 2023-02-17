@@ -59,6 +59,15 @@ const tera={
 			tera.area.forEach(a=>{el({a:'option',b:tera.select1,c:a.a,d:{value:a.a,style:'padding:6px;'}})})
 			tera.loadLines('ALL')
 		}})
+		
+		el({a:'div', b:tera.popup1, c:'latency'})
+		el({a:'div', b:tera.popup1, c:':'})
+		el({a:'div', b:tera.popup1, c:'capacity'})
+		el({a:'div', b:tera.popup1, c:':'})
+		el({a:'div', b:tera.popup1, c:'traffic'})
+		el({a:'div', b:tera.popup1, c:':'})
+		el({a:'div', b:tera.popup1})
+		el({a:'button', b:tera.popup1, c:'Failover Simulation', d:{style:'padding: 1px 4px;'}})
 	},
 	init:()=>{
 		tera.div=el({a:'div',b:document.body,d:{style:'width:100vw;height:100vh;'}})
@@ -71,8 +80,9 @@ const tera={
 			tera.initUI()
 		})
 	},
+	selected: null,
 	hovered: null,
-	popup1: el({a:'div',b:el({a:'div', b:el({a:'div', b:el({a:'div',b:el({a:'div',d:{style:'position:absolute;top:0;left:16px;display:flex;align-items:center;height:calc(100% - 128px);'}}), d:{style:'background:rgba(255,255,255,.4);border-radius:8px;box-shadow:0 0 6px 2px rgba(0,0,0,.1);padding:8px;'}}), c:'info', d:{style:'background:rgba(0,0,0,.8);border-radius:8px;color:rgba(255,255,255,.8);font-weight:bold;padding:4px 32px;margin-bottom:8px;position:relative;'}}),c:'x',d:{style:'background:rgba(255,255,255,.8);color:#000;border-radius:4px;font-weight:bold;padding:0 3px;position:absolute;top:3px;right:6px;'}}).parentElement.parentElement,d:{style:'background:rgba(255,255,255,.6);border-radius:8px;display:flex;flex-direction:column;gap:4px;padding:12px;'}}),
+	popup1: el({a:'div',b:el({a:'div', b:el({a:'div', b:el({a:'div',b:el({a:'div',b:el({a:'div',d:{style:'position:absolute;top:0;left:16px;display:flex;align-items:center;height:calc(100% - 128px);'}}), d:{style:'background:rgba(255,255,255,.4);border-radius:8px;box-shadow:0 0 6px 2px rgba(0,0,0,.1);padding:8px;'}}), d:{style:'background:rgba(0,0,0,.8);border-radius:8px;color:rgba(255,255,255,.8);font-weight:bold;padding:4px 32px;margin-bottom:8px;position:relative;'}})}).parentElement,c:'x',d:{style:'background:rgba(255,255,255,.8);border-radius:4px;color:#000;cursor:default;font-weight:bold;padding:0 3px;position:absolute;top:3px;right:6px;'},e:{click:a=>{tera.div.removeChild(tera.popup1.parentElement.parentElement);tera.map.setFeatureState({source:'line', id:tera.selected}, {hover:false} );tera.map.setFeatureState({source:'line', id:tera.selected+1}, {hover:false} );tera.selected=null}}}).parentElement.parentElement,d:{style:'background:rgba(255,255,255,.6);border-radius:8px;display:grid;grid-template-columns: auto auto;gap:4px;padding:12px;'}}),
 	draw:a=>{
 		a=JSON.parse(a)
 		a.features.forEach((b,c)=>{a.features[c].id=c+1})
@@ -83,17 +93,19 @@ const tera={
 		tera.map.addLayer({id:'line', type:'line', source:'line', paint:{'line-color':'#000000', 'line-gap-width':3, 'line-width':['case', ['boolean', ['feature-state', 'hover'], false], 3, 1]}})
 		tera.map.addLayer({id:'line2', type:'line', source:'line', paint:{'line-color':['get', 'color'], 'line-width':['case', ['boolean', ['feature-state', 'hover'], false], 3, 3]}})
 		tera.map.on('mousemove', 'line', a=> {
+			if (tera.selected!=null) return
 			if (a.features.length > 0) {
-				tera.map.setFeatureState({source:'line', id:tera.hovered}, {hover:false} )
-				tera.map.setFeatureState({source:'line', id:tera.hovered+1}, {hover:false} )
+				tera.hovered!=null&&tera.map.setFeatureState({source:'line', id:tera.hovered}, {hover:false} )
+				tera.hovered!=null&&tera.map.setFeatureState({source:'line', id:tera.hovered+1}, {hover:false} )
 				tera.hovered = a.features[0].id-a.features[0].id%2
-				tera.popup1.innerHTML=`<div>node1 : ${tera.lines[tera.hovered].a}</div><div>node2 : ${tera.lines[tera.hovered+1].a}</div>`
+				tera.popup1.parentElement.children[0].children[0].textContent = `${tera.lines[tera.hovered].a} - ${tera.lines[tera.hovered+1].a}`
 				tera.div.appendChild(tera.popup1.parentElement.parentElement)
 				tera.map.setFeatureState({source:'line', id:tera.hovered}, {hover:true})
 				tera.map.setFeatureState({source:'line', id:tera.hovered+1}, {hover:true})
 			}
 		})
 		tera.map.on('mouseleave', 'line', () => {
+			if (tera.selected!=null) return
 			if (tera.hovered!=null) {
 				tera.map.setFeatureState({source:'line', id:tera.hovered}, {hover:false})
 				tera.map.setFeatureState({source:'line', id:tera.hovered+1}, {hover:false})
@@ -101,10 +113,19 @@ const tera={
 				tera.hovered = null
 			}
 		})
-		tera.map.on('click', () => {
-			//console.log(tera.map.getSource('map')._data)
+		tera.map.on('click', 'line', a=> {
+			if (a.features.length > 0) {
+				tera.selected!=null&&tera.map.setFeatureState({source:'line', id:tera.selected}, {hover:false} )
+				tera.selected!=null&&tera.map.setFeatureState({source:'line', id:tera.selected+1}, {hover:false} )
+				tera.hovered!=null&&tera.map.setFeatureState({source:'line', id:tera.hovered}, {hover:false} )
+				tera.hovered!=null&&tera.map.setFeatureState({source:'line', id:tera.hovered+1}, {hover:false} )
+				tera.selected = a.features[0].id-a.features[0].id%2
+				tera.popup1.parentElement.children[0].children[0].textContent = `${tera.lines[tera.selected].a} - ${tera.lines[tera.selected+1].a}`
+				tera.div.appendChild(tera.popup1.parentElement.parentElement)
+				tera.map.setFeatureState({source:'line', id:tera.selected}, {hover:true})
+				tera.map.setFeatureState({source:'line', id:tera.selected+1}, {hover:true})
+			}
 		})
-		//tera.initPoint()
 	},
 	drawLine: a=>{
 		const b=b=>{tera.map.getSource('line')._data.features.push({ type:'Feature', id:b.id, properties:{color:tera.lines[b.id].color}, geometry:{type:'LineString', coordinates:b.b } })}
