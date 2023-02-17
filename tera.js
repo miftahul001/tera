@@ -16,6 +16,18 @@ const tera={
 		tera.marker=[]
 		tera.map.getSource('line')._data.features=[]
 		tera.map.getSource('line').setData(tera.map.getSource('line')._data)
+		const ccol=()=>{
+			const a=Math.random()*100
+			if (a<=1) return tera.warna[0]
+			if (a<=10) return tera.warna[1]
+			if (a<=25) return tera.warna[2]
+			if (a<=40) return tera.warna[3]
+			if (a<=55) return tera.warna[4]
+			if (a<=70) return tera.warna[5]
+			if (a<=93) return tera.warna[6]
+			return tera.warna[7]
+		}
+		const nodes=[]
 		tera.loader({a:`data/${a}.json`, b:a=>{
 			var id=0;
 			[...new Set(JSON.parse(a))].forEach(a=>{
