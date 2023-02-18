@@ -68,6 +68,14 @@ const tera={
 		el({a:'div', b:tera.popup1, c:':'})
 		el({a:'div', b:tera.popup1})
 		el({a:'button', b:tera.popup1, c:'Failover Simulation', d:{style:'padding: 1px 4px;'}})
+		
+		tera.legends=el({a:'div',b:tera.div,d:{style:'position:absolute;bottom:12px;left:16px;background:rgba(255,255,255,.4);border-radius:8px;box-shadow:0 0 6px 2px rgba(0,0,0,.1);padding:4px;'}})
+		el({a:'div',b:tera.legends,c:'Traffic Load',d:{style:'background:rgba(255,255,255,.6);border-radius:8px 8px 0 0;font-weight:bold;padding:6px 0 0 16px;'}});
+		(()=>{
+			const a=el({a:'div',b:tera.legends,d:{style:'background:rgba(255,255,255,.6);border-radius:0 0 8px 8px;display:grid;grid-template-columns:repeat(8,48px);gap:4px 6px;padding:0 14px 6px 6px;'}});
+			['0-1%','1-10%','10-25%','25-40%','40-55%','55-70%','70-93%','93-100%'].forEach(b=>{el({a:'div',b:a,c:b,d:{style:'justify-self:center;'}})});
+			tera.warna.forEach(b=>{el({a:'div',b:a,d:{style:`background:${b};border:1px solid rgba(0,0,0,.4);border-radius:4px;width:32px;height:16px;justify-self:center;`}})})
+		})()
 	},
 	init:()=>{
 		tera.div=el({a:'div',b:document.body,d:{style:'width:100vw;height:100vh;'}})
