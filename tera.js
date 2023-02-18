@@ -122,7 +122,7 @@ const tera={
 		tera.map.addLayer({id:'line', type:'line', source:'line', paint:{'line-color':'#000000', 'line-gap-width':3, 'line-width':['case', ['boolean', ['feature-state', 'hover'], false], 3, 1]}})
 		tera.map.addLayer({id:'line2', type:'line', source:'line', paint:{'line-color':['get', 'color'], 'line-width':['case', ['boolean', ['feature-state', 'hover'], false], 3, 3]}})
 		tera.map.addSource('anim', {type:'geojson', data:{type:"FeatureCollection", features:[]}})
-		tera.map.addLayer({id:'anim', type:'line', source:'anim', paint:{'line-color':'rgba(0,0,0,.1)', 'line-width':1}, layout:{'line-cap':'round', }})
+		tera.map.addLayer({id:'anim', type:'line', source:'anim', paint:{'line-color':'rgba(255,255,255,.6)', 'line-width':1}, layout:{'line-cap':'round', }})
 		tera.map.on('mousemove', 'line', a=> {
 			if (tera.selected!=null) return
 			if (a.features.length > 0) {
