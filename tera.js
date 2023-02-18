@@ -4,6 +4,7 @@ const tera={
 	lines: [],
 	area: [],
 	marker: [],
+	alert:[],
 	loader: a=>{
 		const b = new XMLHttpRequest()
 		b.open('GET', a.a)
@@ -14,6 +15,8 @@ const tera={
 		tera.lines=[]
 		tera.marker.forEach(a=>{a.remove()})
 		tera.marker=[]
+		tera.alert.forEach(a=>{a.remove()})
+		tera.alert=[]
 		tera.map.getSource('line')._data.features=[]
 		tera.map.getSource('line').setData(tera.map.getSource('line')._data)
 		const ccol=()=>{
