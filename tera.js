@@ -12,6 +12,7 @@ const tera={
 		b.send()
 	},
 	loadLines: a=>{
+		tera.anim.active=false
 		tera.lines=[]
 		tera.marker.forEach(a=>{a.remove()})
 		tera.marker=[]
@@ -57,6 +58,8 @@ const tera={
 				id+=2
 			})
 			tera.map.getSource('line').setData(tera.map.getSource('line')._data)
+			tera.anim.active=true
+			tera.animate()
 		}})
 	},
 	initUI: ()=>{
@@ -90,9 +93,9 @@ const tera={
 		tera.legends=el({a:'div',b:tera.div,d:{style:'position:absolute;bottom:12px;left:16px;background:rgba(255,255,255,.4);border-radius:8px;box-shadow:0 0 6px 2px rgba(0,0,0,.1);padding:4px;'}})
 		el({a:'div',b:tera.legends,c:'Traffic Load',d:{style:'background:rgba(255,255,255,.6);border-radius:8px 8px 0 0;font-weight:bold;padding:6px 0 0 16px;'}});
 		(()=>{
-			const a=el({a:'div',b:tera.legends,d:{style:'background:rgba(255,255,255,.6);border-radius:0 0 8px 8px;display:grid;grid-template-columns:repeat(8,48px);gap:4px 6px;padding:0 14px 6px 6px;'}});
+			const a=el({a:'div',b:tera.legends,d:{style:'background:rgba(255,255,255,.6);border-radius:0 0 8px 8px;display:grid;grid-template-columns:repeat(8,48px);gap:4px 6px;padding:0 14px 6px 6px;'}})
+			tera.warna.forEach(b=>{el({a:'div',b:a,d:{style:`background:${b};border:1px solid rgba(0,0,0,.4);border-radius:4px;width:32px;height:16px;justify-self:center;`}})});
 			['0-1%','1-10%','10-25%','25-40%','40-55%','55-70%','70-93%','93-100%'].forEach(b=>{el({a:'div',b:a,c:b,d:{style:'justify-self:center;'}})});
-			tera.warna.forEach(b=>{el({a:'div',b:a,d:{style:`background:${b};border:1px solid rgba(0,0,0,.4);border-radius:4px;width:32px;height:16px;justify-self:center;`}})})
 		})()
 	},
 	init:()=>{
@@ -118,6 +121,8 @@ const tera={
 		tera.map.addSource('line', {type:'geojson', data:{type:"FeatureCollection", features:[]}})
 		tera.map.addLayer({id:'line', type:'line', source:'line', paint:{'line-color':'#000000', 'line-gap-width':3, 'line-width':['case', ['boolean', ['feature-state', 'hover'], false], 3, 1]}})
 		tera.map.addLayer({id:'line2', type:'line', source:'line', paint:{'line-color':['get', 'color'], 'line-width':['case', ['boolean', ['feature-state', 'hover'], false], 3, 3]}})
+		tera.map.addSource('anim', {type:'geojson', data:{type:"FeatureCollection", features:[]}})
+		tera.map.addLayer({id:'anim', type:'line', source:'anim', paint:{'line-color':'rgba(0,0,0,.1)', 'line-width':1}, layout:{'line-cap':'round', }})
 		tera.map.on('mousemove', 'line', a=> {
 			if (tera.selected!=null) return
 			if (a.features.length > 0) {
@@ -161,6 +166,30 @@ const tera={
 		xy.push([tera.lines[a+1].lng,tera.lines[a+1].lat])
 		b({id:a, b:xy.slice(0,Math.ceil(xy.length/2))})
 		b({id:a+1, b:xy.slice(-Math.ceil(xy.length/2))})
+	},
+	anim: {active:false, t:0, a:0, b:1, c:1},
+	animate: t=>{
+		if (!tera.anim.active) return
+		if (t - tera.anim.t > 100) {
+			tera.anim.t = t
+			if (tera.anim.c==1) {
+				tera.anim.b++
+				if (tera.anim.b>6)tera.anim.a++
+				if (tera.anim.a>20)tera.anim.c=2
+			} else {
+				tera.anim.b--
+				if (tera.anim.a>0)tera.anim.a--
+				if (tera.anim.b<1)tera.anim.c=1
+			}
+			const a=tera.map.getSource('line')._data.features
+			const b=[]
+			const c=a.length
+			for (var i=0;i<c;i+=2) {
+				b.push({type:'Feature', properties:{c:'rgba(255,255,255,.8)',w:1}, geometry:{type:'LineString', coordinates:[...a[i].geometry.coordinates, ...a[i+1].geometry.coordinates.slice(1)].slice(tera.anim.a,tera.anim.b) }})
+			}
+			tera.map.getSource('anim').setData({type:"FeatureCollection", features:b})
+		}
+		requestAnimationFrame(tera.animate)
 	},
 }
 
