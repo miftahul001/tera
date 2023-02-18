@@ -34,8 +34,13 @@ const tera={
 		tera.loader({a:`data/${a}.json`, b:a=>{
 			var id=0;
 			[...new Set(JSON.parse(a))].forEach(a=>{
-				tera.lines.push({...tera.nodes.find(b=>b.a==a[0]), lng3:a[2][0], lat3:a[2][1], color:ccol()})
-				tera.lines.push({...tera.nodes.find(b=>b.a==a[1]), color:ccol()})
+				if (a[0]=='BTC'&&a[1]=='MDO'){
+					tera.lines.push({...tera.nodes.find(b=>b.a==a[0]), lng3:a[2][0], lat3:a[2][1], color:tera.warna[7]})
+					tera.lines.push({...tera.nodes.find(b=>b.a==a[1]), color:tera.warna[7]})
+				} else {
+					tera.lines.push({...tera.nodes.find(b=>b.a==a[0]), lng3:a[2][0], lat3:a[2][1], color:ccol()})
+					tera.lines.push({...tera.nodes.find(b=>b.a==a[1]), color:ccol()})
+				}
 				if (!nodes.find(b=>b==a[0])) {
 					tera.marker.push(new mapboxgl.Marker({draggable:true, element:el({a:'div',c:a[0], d:{style:'padding:0 4px;font-size:10px;font-family:"Barlow Condensed";background:rgba(87,136,250,.8);border-radius:50%;'}})}).setLngLat([tera.lines[id].lng, tera.lines[id].lat]).addTo(tera.map))
 					nodes.push(a[0])
