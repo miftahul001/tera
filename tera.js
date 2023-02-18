@@ -42,6 +42,10 @@ const tera={
 					nodes.push(a[1])
 				}
 				tera.drawLine(id)
+				if (a[0]=='BTC'&&a[1]=='MDO'&&tera.alert.length==0){
+					tera.alert.push(new mapboxgl.Marker({element:el({a:'div',d:{style:'background:rgba(255,255,255,.6);border-radius:20%;box-shadow:0 0 6px 2px rgba(0,0,0,.1);padding:4px;font-size:16px;animation:alert1 1.5s linear infinite;'}})}).setLngLat(tera.map.getSource('line')._data.features.slice(-1)[0].geometry.coordinates[0]).addTo(tera.map))
+					tera.alert[0].getElement().innerHTML='&#128680;'
+				}
 				id+=2
 			})
 			tera.map.getSource('line').setData(tera.map.getSource('line')._data)
@@ -53,11 +57,13 @@ const tera={
 			b&&tera.map.fitBounds(b.b)
 			tera.loadLines(a.target.value)
 		}}})
-		tera.loader({a:'data/nodes.json', b:a=>{tera.nodes=JSON.parse(a)}})
-		tera.loader({a:'data/area.json', b:a=>{
-			tera.area=JSON.parse(a)
-			tera.area.forEach(a=>{el({a:'option',b:tera.select1,c:a.a,d:{value:a.a,style:'padding:6px;'}})})
-			tera.loadLines('ALL')
+		tera.loader({a:'data/nodes.json', b:a=>{
+			tera.nodes=JSON.parse(a)
+			tera.loader({a:'data/area.json', b:a=>{
+				tera.area=JSON.parse(a)
+				tera.area.forEach(a=>{el({a:'option',b:tera.select1,c:a.a,d:{value:a.a,style:'padding:6px;'}})})
+				tera.loadLines('ALL')
+			}})
 		}})
 		
 		el({a:'div', b:tera.popup1, c:'Traffic In'})
@@ -87,8 +93,8 @@ const tera={
 			//tera.map.getStyle().layers.forEach(a=>{(a.id==='land'||a.id==='water')||tera.map.removeLayer(a.id)})
 			//tera.map.setPaintProperty('land', 'background-color', 'rgba(0,0,0,.1)')//#CAD2D3
 			tera.loader({a:'map.json',b:tera.draw,c:a=>{alert(a)}})
-			tera.initUI()
 		})
+		el({a:'style',b:document.head,c:'@keyframes alert1{50%{font-size:24px;padding:6px;}}'})
 	},
 	selected: null,
 	hovered: null,
@@ -136,6 +142,7 @@ const tera={
 				tera.map.setFeatureState({source:'line', id:tera.selected+1}, {hover:true})
 			}
 		})
+		tera.initUI()
 	},
 	drawLine: a=>{
 		const b=b=>{tera.map.getSource('line')._data.features.push({ type:'Feature', id:b.id, properties:{color:tera.lines[b.id].color}, geometry:{type:'LineString', coordinates:b.b } })}
