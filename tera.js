@@ -88,7 +88,7 @@ const tera={
 		el({a:'div', b:tera.popup1, c:'Occupancy'})
 		el({a:'div', b:tera.popup1, c:': 90%'})
 		el({a:'div', b:tera.popup1})
-		el({a:'button', b:tera.popup1, c:'Failover Simulation', d:{style:'padding: 1px 4px;'}})
+		el({a:'button', b:tera.popup1, c:'Failover Simulation', d:{style:'padding: 1px 4px;'}, e:{click:a=>{document.body.appendChild(tera.simulation.ct);tera.simulation.show()}}})
 		
 		tera.legends=el({a:'div',b:tera.div,d:{style:'position:absolute;bottom:12px;left:16px;background:rgba(255,255,255,.4);border-radius:8px;box-shadow:0 0 6px 2px rgba(0,0,0,.1);padding:4px;'}})
 		el({a:'div',b:tera.legends,c:'Traffic Load',d:{style:'background:rgba(255,255,255,.6);border-radius:8px 8px 0 0;font-weight:bold;padding:6px 0 0 16px;'}});
@@ -199,4 +199,5 @@ const initApp=()=>{
 	//mapboxgl.accessToken = 'pk.eyJ1IjoicXVlMzIxNiIsImEiOiJjaWhxZmMxMDUwMDBzdXhsdWh0ZDkyMzVqIn0.sz3lHuX9erctIPE2ya6eCw'
 	//mapboxgl.accessToken = 'pk.eyJ1IjoibmFkaiIsImEiOiJjaW43a2hyOXYwMDJrd29semd6bmZha2JuIn0.nE1hjNjGG2rlxm_oMrysyg'
 	tera.init()
+	tera.simulation=mApp()
 }
